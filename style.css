@@ -896,3 +896,427 @@ section p {
         flex-direction: column;
     }
 }
+
+/* ============================================================
+   CUSTOM CURSOR — REALISTIC GLOWING SPARK + TRAIL
+   Desktop only
+   ============================================================ */
+
+/* Hide by default (mobile) */
+.cursor-spark-core,
+.cursor-spark-glow,
+.cursor-trail-container {
+    display: none;
+}
+
+
+/* ============================================================
+   DESKTOP / MOUSE DEVICES
+   ============================================================ */
+
+@media (hover: hover) and (pointer: fine) {
+
+    /* Hide default cursor */
+    body,
+    a,
+    button,
+    .btn,
+    .nav-link,
+    input,
+    textarea,
+    select {
+        cursor: none;
+    }
+
+
+    /* ========================================================
+       SPARK CORE
+       ======================================================== */
+
+    .cursor-spark-core {
+        display: block;
+        position: fixed;
+
+        top: 0;
+        left: 0;
+
+        width: 8px;
+        height: 8px;
+
+        border-radius: 50%;
+
+        pointer-events: none;
+
+        z-index: 10001;
+
+        transform: translate(-50%, -50%);
+
+        background: radial-gradient(
+            circle,
+            #ffffff 0%,
+            #ffffff 15%,
+            #9beaff 30%,
+            #39C6FF 50%,
+            #1677FF 72%,
+            transparent 100%
+        );
+
+        box-shadow:
+            0 0 6px #ffffff,
+            0 0 14px #39C6FF,
+            0 0 26px #1677FF,
+            0 0 40px rgba(22, 119, 255, 0.65);
+
+        animation:
+            sparkFlicker 0.15s infinite alternate;
+
+        will-change: transform, opacity, filter;
+    }
+
+
+    /* Hover */
+    .cursor-spark-core.hover {
+        width: 12px;
+        height: 12px;
+
+        box-shadow:
+            0 0 8px #ffffff,
+            0 0 18px #39C6FF,
+            0 0 35px #1677FF,
+            0 0 55px rgba(22, 119, 255, 0.8);
+    }
+
+
+    /* Click */
+    .cursor-spark-core.click {
+        width: 16px;
+        height: 16px;
+
+        box-shadow:
+            0 0 10px #ffffff,
+            0 0 22px #39C6FF,
+            0 0 45px #1677FF,
+            0 0 75px rgba(22, 119, 255, 1);
+    }
+
+
+    /* Click flash */
+    .cursor-spark-core.flash {
+        animation:
+            sparkFlash 0.18s ease-out,
+            sparkFlicker 0.15s infinite alternate;
+    }
+
+
+    /* ========================================================
+       AMBIENT GLOW
+       ======================================================== */
+
+    .cursor-spark-glow {
+        display: block;
+
+        position: fixed;
+
+        top: 0;
+        left: 0;
+
+        width: 120px;
+        height: 120px;
+
+        border-radius: 50%;
+
+        pointer-events: none;
+
+        z-index: 10000;
+
+        transform: translate(-50%, -50%);
+
+        background: radial-gradient(
+            circle,
+            rgba(57, 198, 255, 0.18) 0%,
+            rgba(22, 119, 255, 0.10) 35%,
+            rgba(22, 119, 255, 0.04) 55%,
+            transparent 72%
+        );
+
+        filter: blur(8px);
+
+        will-change: transform, opacity;
+    }
+
+
+    /* Hover glow */
+    .cursor-spark-glow.hover {
+        width: 160px;
+        height: 160px;
+
+        background: radial-gradient(
+            circle,
+            rgba(57, 198, 255, 0.28) 0%,
+            rgba(22, 119, 255, 0.14) 35%,
+            rgba(22, 119, 255, 0.05) 55%,
+            transparent 72%
+        );
+
+        filter: blur(10px);
+    }
+
+
+    /* ========================================================
+       TRAIL CONTAINER
+       ======================================================== */
+
+    .cursor-trail-container {
+        display: block;
+
+        position: fixed;
+
+        inset: 0;
+
+        pointer-events: none;
+
+        z-index: 9999;
+
+        overflow: hidden;
+    }
+
+
+    /* ========================================================
+       NORMAL SPARK PARTICLE
+       ======================================================== */
+
+    .trail-particle {
+        position: absolute;
+
+        left: 0;
+        top: 0;
+
+        border-radius: 50%;
+
+        pointer-events: none;
+
+        transform: translate(-50%, -50%);
+
+        background: radial-gradient(
+            circle,
+            #ffffff 0%,
+            #ffffff 18%,
+            #a9efff 32%,
+            #39C6FF 55%,
+            #1677FF 75%,
+            transparent 100%
+        );
+
+        box-shadow:
+            0 0 4px #ffffff,
+            0 0 8px #39C6FF,
+            0 0 14px rgba(22, 119, 255, 0.9);
+
+        will-change:
+            transform,
+            opacity;
+
+        animation:
+            sparkParticle 0.65s ease-out forwards;
+    }
+
+
+    /* ========================================================
+       MICRO SPARK
+       ======================================================== */
+
+    .trail-particle.micro {
+        width: 2px !important;
+        height: 2px !important;
+
+        box-shadow:
+            0 0 3px #ffffff,
+            0 0 6px #39C6FF,
+            0 0 10px rgba(22, 119, 255, 0.7);
+    }
+
+
+    /* ========================================================
+       SPARK STREAK
+       ======================================================== */
+
+    .trail-particle.streak {
+        width: 2px !important;
+        height: 12px !important;
+
+        border-radius: 50%;
+
+        transform-origin: center;
+
+        animation:
+            sparkStreak 0.55s ease-out forwards;
+    }
+
+
+    /* ========================================================
+       NORMAL PARTICLE ANIMATION
+       ======================================================== */
+
+    @keyframes sparkParticle {
+
+        0% {
+            opacity: 1;
+
+            transform:
+                translate(-50%, -50%)
+                scale(1);
+        }
+
+        20% {
+            opacity: 1;
+        }
+
+        50% {
+            opacity: 0.75;
+        }
+
+        75% {
+            opacity: 0.35;
+        }
+
+        100% {
+            opacity: 0;
+
+            transform:
+                translate(
+                    calc(-50% + var(--move-x)),
+                    calc(-50% + var(--move-y))
+                )
+                scale(0.08);
+        }
+    }
+
+
+    /* ========================================================
+       STREAK ANIMATION
+       ======================================================== */
+
+    @keyframes sparkStreak {
+
+        0% {
+            opacity: 1;
+
+            transform:
+                translate(-50%, -50%)
+                rotate(var(--angle))
+                scaleY(1);
+        }
+
+        35% {
+            opacity: 0.8;
+        }
+
+        100% {
+            opacity: 0;
+
+            transform:
+                translate(
+                    calc(-50% + var(--move-x)),
+                    calc(-50% + var(--move-y))
+                )
+                rotate(var(--angle))
+                scaleY(0.15);
+        }
+    }
+
+
+    /* ========================================================
+       CLICK BURST
+       ======================================================== */
+
+    .spark-burst {
+        position: absolute;
+
+        width: 5px;
+        height: 5px;
+
+        border-radius: 50%;
+
+        pointer-events: none;
+
+        transform: translate(-50%, -50%);
+
+        background: #ffffff;
+
+        box-shadow:
+            0 0 5px #ffffff,
+            0 0 12px #39C6FF,
+            0 0 25px #1677FF;
+
+        animation:
+            sparkBurst 0.65s ease-out forwards;
+    }
+
+
+    @keyframes sparkBurst {
+
+        0% {
+            opacity: 1;
+
+            transform:
+                translate(-50%, -50%)
+                scale(1);
+        }
+
+        35% {
+            opacity: 0.9;
+        }
+
+        100% {
+            opacity: 0;
+
+            transform:
+                translate(
+                    calc(-50% + var(--burst-x)),
+                    calc(-50% + var(--burst-y))
+                )
+                scale(0.08);
+        }
+    }
+
+
+    /* ========================================================
+       CORE FLICKER
+       ======================================================== */
+
+    @keyframes sparkFlicker {
+
+        0% {
+            opacity: 1;
+        }
+
+        50% {
+            opacity: 0.88;
+        }
+
+        100% {
+            opacity: 1;
+        }
+    }
+
+
+    /* ========================================================
+       CLICK FLASH
+       ======================================================== */
+
+    @keyframes sparkFlash {
+
+        0% {
+            filter: brightness(1);
+        }
+
+        35% {
+            filter: brightness(2.8);
+        }
+
+        100% {
+            filter: brightness(1);
+        }
+    }
+
+}
