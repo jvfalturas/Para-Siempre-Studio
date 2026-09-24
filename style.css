@@ -1,3 +1,6 @@
+/* ============================================================ */
+/* ROOT VARIABLES                                                */
+/* ============================================================ */
 :root {
     --blue: #1e40af;
     --blue-dark: #172554;
@@ -9,8 +12,18 @@
     --light: #f8fafc;
     --heading-font: "Playfair Display", serif;
     --body-font: "DM Sans", sans-serif;
+
+    /* Loader colors (dark theme) */
+    --loader-bg: #0a0f1e;
+    --loader-cyan: #39C6FF;
+    --loader-bright: #1677FF;
+    --loader-royal: #123B72;
+    --loader-muted: #B8C7DA;
 }
 
+/* ============================================================ */
+/* BASE STYLES                                                   */
+/* ============================================================ */
 html {
     scroll-behavior: smooth;
     scroll-padding-top: 80px;
@@ -19,7 +32,12 @@ html {
 body {
     font-family: var(--body-font);
     color: var(--text);
-    background: var(--white);
+    background-color: #faf9f6;
+}
+
+body.loading {
+    overflow: hidden;
+    height: 100vh;
 }
 
 h1,
@@ -33,7 +51,161 @@ a {
     text-decoration: none;
 }
 
-/* ========================= NAVBAR ========================= */
+/* ============================================================ */
+/* LOADING SCREEN                                                */
+/* ============================================================ */
+.loader-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: var(--loader-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.8s ease, visibility 0.8s ease;
+}
+
+.loader-overlay.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.loader-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    text-align: center;
+}
+
+/* Monogram (PS circle) */
+.loader-monogram {
+    font-family: var(--heading-font);
+    font-size: 3rem;
+    font-weight: 600;
+    color: var(--white);
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle at 30% 30%, rgba(22, 119, 255, 0.2), transparent 70%);
+    border: 2px solid rgba(57, 198, 255, 0.3);
+    box-shadow:
+        0 0 40px rgba(22, 119, 255, 0.4),
+        inset 0 0 30px rgba(57, 198, 255, 0.1);
+    text-shadow: 0 0 25px var(--loader-cyan);
+    animation: monogramPulse 2s ease-in-out infinite;
+    position: relative;
+}
+
+.loader-monogram::before {
+    content: '';
+    position: absolute;
+    inset: -8px;
+    border-radius: 50%;
+    border: 1px solid rgba(57, 198, 255, 0.2);
+    animation: ringPulse 2s ease-in-out infinite;
+}
+
+@keyframes monogramPulse {
+    0%, 100% {
+        box-shadow:
+            0 0 40px rgba(22, 119, 255, 0.4),
+            inset 0 0 30px rgba(57, 198, 255, 0.1);
+        transform: scale(1);
+    }
+    50% {
+        box-shadow:
+            0 0 60px rgba(22, 119, 255, 0.7),
+            inset 0 0 40px rgba(57, 198, 255, 0.2);
+        transform: scale(1.05);
+    }
+}
+
+@keyframes ringPulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 0.5;
+    }
+    50% {
+        transform: scale(1.15);
+        opacity: 0.2;
+    }
+}
+
+/* Brand text */
+.loader-brand {
+    font-family: var(--heading-font);
+    font-size: 1.5rem;
+    font-weight: 500;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--white);
+    text-shadow: 0 0 20px rgba(57, 198, 255, 0.5);
+    opacity: 0;
+    animation: fadeInUp 1s 0.3s forwards;
+}
+
+.loader-brand span {
+    display: block;
+    font-family: var(--body-font);
+    font-size: 0.7rem;
+    font-weight: 300;
+    letter-spacing: 6px;
+    color: var(--loader-cyan);
+    margin-top: 6px;
+    opacity: 0.8;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Progress bar */
+.loader-bar {
+    width: 240px;
+    height: 2px;
+    background: rgba(57, 198, 255, 0.15);
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+    opacity: 0;
+    animation: fadeInUp 1s 0.6s forwards;
+}
+
+.loader-bar-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--loader-royal), var(--loader-bright), var(--loader-cyan));
+    border-radius: 4px;
+    box-shadow: 0 0 15px var(--loader-cyan);
+    transition: width 0.3s ease;
+}
+
+/* Percentage */
+.loader-percentage {
+    font-family: var(--body-font);
+    font-size: 0.85rem;
+    font-weight: 300;
+    letter-spacing: 3px;
+    color: var(--loader-muted);
+    opacity: 0;
+    animation: fadeInUp 1s 0.9s forwards;
+}
+
+/* ============================================================ */
+/* NAVBAR                                                        */
+/* ============================================================ */
 #mainNavbar {
     background: rgba(255, 255, 255, 0.96);
     backdrop-filter: blur(12px);
@@ -111,9 +283,12 @@ a {
     color: white;
 }
 
-/* ========================= HERO ========================= */
+/* ============================================================ */
+/* HERO                                                          */
+/* ============================================================ */
 .hero-section {
-    background: radial-gradient(circle at 90% 10%, rgba(219, 234, 254, 0.8), transparent 35%), linear-gradient(135deg, #ffffff 0%, #f8fbff 100%);
+    background: radial-gradient(circle at 90% 10%, rgba(219, 234, 254, 0.8), transparent 35%),
+                linear-gradient(135deg, #ffffff 0%, #f8fbff 100%);
 }
 
 .hero-content {
@@ -207,7 +382,9 @@ a {
     font-size: 13px;
 }
 
-/* ========================= GENERAL SECTIONS ========================= */
+/* ============================================================ */
+/* GENERAL SECTIONS                                              */
+/* ============================================================ */
 .section-padding {
     padding: 110px 0;
 }
@@ -232,7 +409,13 @@ section p {
     line-height: 1.8;
 }
 
-/* ========================= ABOUT ========================= */
+.section-khaki {
+    background-color: #f3eee5;
+}
+
+/* ============================================================ */
+/* ABOUT                                                         */
+/* ============================================================ */
 .about-image-wrapper {
     padding-right: 30px;
 }
@@ -270,7 +453,9 @@ section p {
     line-height: 1.5;
 }
 
-/* ========================= SERVICES ========================= */
+/* ============================================================ */
+/* SERVICES                                                      */
+/* ============================================================ */
 .services-section {
     background: var(--light);
 }
@@ -311,7 +496,9 @@ section p {
     font-size: 14px;
 }
 
-/* ========================= INCLUDED FEATURES ========================= */
+/* ============================================================ */
+/* INCLUDED FEATURES                                             */
+/* ============================================================ */
 .included-card {
     padding: 25px;
     border-bottom: 1px solid #e2e8f0;
@@ -333,7 +520,9 @@ section p {
     margin-bottom: 0;
 }
 
-/* ========================= PROJECTS ========================= */
+/* ============================================================ */
+/* PROJECTS                                                      */
+/* ============================================================ */
 .projects-section {
     background: var(--light);
 }
@@ -382,7 +571,9 @@ section p {
     font-size: 13px;
 }
 
-/* ========================= HOW IT WORKS ========================= */
+/* ============================================================ */
+/* HOW IT WORKS                                                  */
+/* ============================================================ */
 .process-card {
     text-align: center;
     padding: 20px;
@@ -409,7 +600,9 @@ section p {
     font-size: 14px;
 }
 
-/* ========================= CTA ========================= */
+/* ============================================================ */
+/* CTA                                                           */
+/* ============================================================ */
 .cta-section {
     padding: 110px 20px;
     background: linear-gradient(135deg, var(--blue-dark), var(--blue));
@@ -432,7 +625,9 @@ section p {
     color: var(--blue-soft);
 }
 
-/* ========================= CONTACT ========================= */
+/* ============================================================ */
+/* CONTACT                                                       */
+/* ============================================================ */
 .contact-section {
     background: white;
 }
@@ -496,7 +691,9 @@ section p {
     font-size: 12px;
 }
 
-/* ========================= FOOTER ========================= */
+/* ============================================================ */
+/* FOOTER                                                        */
+/* ============================================================ */
 .footer {
     padding: 70px 0 25px;
     background: var(--blue-dark);
@@ -557,7 +754,9 @@ section p {
     font-size: 11px;
 }
 
-/* ========================= MOBILE ========================= */
+/* ============================================================ */
+/* RESPONSIVE                                                    */
+/* ============================================================ */
 @media (max-width: 991px) {
     .navbar-collapse {
         background: white;
@@ -587,53 +786,11 @@ section p {
 }
 
 @media (max-width: 576px) {
-    .section-padding {
-        padding: 75px 0;
-    }
-
-    .hero-content h1 {
-        font-size: 45px;
-    }
-
-    .hero-description {
-        font-size: 16px;
-    }
-
-    .hero-image-wrapper {
-        padding: 15px;
-    }
-
-    .hero-image {
-        height: 430px;
-    }
-
-    .hero-floating-card {
-        left: 0;
-        bottom: 30px;
-    }
-
-    .quote-card {
-        padding: 30px 20px;
-    }
-
-    .footer-bottom {
-        flex-direction: column;
-    }
-}
-
-/* =========================
-   EXTRA MOBILE RESPONSIVE
-========================= */
-
-@media (max-width: 576px) {
-
-    /* Prevent horizontal overflow */
     html,
     body {
         overflow-x: hidden;
     }
 
-    /* Navbar */
     .navbar {
         padding: 12px 0;
     }
@@ -642,7 +799,10 @@ section p {
         margin-left: 5px;
     }
 
-    /* Hero */
+    .section-padding {
+        padding: 70px 15px;
+    }
+
     .hero-section {
         padding-left: 15px;
         padding-right: 15px;
@@ -666,7 +826,6 @@ section p {
         width: 100%;
     }
 
-    /* Hero image */
     .hero-image-wrapper {
         padding: 10px;
         margin-top: 20px;
@@ -692,19 +851,11 @@ section p {
         font-size: 18px;
     }
 
-
-    /* Sections */
-    .section-padding {
-        padding: 70px 15px;
-    }
-
     section h2,
     .section-heading h2 {
         font-size: 35px;
     }
 
-
-    /* About */
     .about-image-wrapper {
         padding-right: 0;
     }
@@ -713,20 +864,14 @@ section p {
         height: 400px;
     }
 
-
-    /* Services */
     .service-card {
         padding: 28px 22px;
     }
 
-
-    /* Projects */
     .project-card img {
         height: 400px;
     }
 
-
-    /* CTA */
     .cta-section {
         padding: 80px 20px;
     }
@@ -735,8 +880,6 @@ section p {
         font-size: 36px;
     }
 
-
-    /* Contact */
     .quote-card {
         padding: 30px 20px;
     }
@@ -745,26 +888,11 @@ section p {
         font-size: 27px;
     }
 
-
-    /* Footer */
     .footer {
         padding: 60px 20px 25px;
     }
 
-}
-
-body {
-    background-color: #faf9f6;
-}
-
-.section-khaki {
-    background-color: #f3eee5;
-}
-
-.section-blue {
-    background-color: #172554;
-}
-
-.khaki-accent {
-    color: #8f8068;
+    .footer-bottom {
+        flex-direction: column;
+    }
 }
